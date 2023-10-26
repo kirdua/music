@@ -1,3 +1,58 @@
+<script>
+import { mapActions } from "pinia"
+import useUserStore from "@/stores/user"
+
+export default {
+  name: "RegisterForm",
+  data() {
+    return {
+      tab: "login",
+      schema: {
+        name: "required|min:3|max:100|alpha_spaces",
+        email: "required|min:3|max:100|email",
+        age: "required|min_value:18|max_value:100",
+        password: "required|min:9|max:100|excluded:password",
+        confirm_password: "passwords_mismatch:@password",
+        country: "required|country_excluded:Antarctica",
+        tos: "tos",
+      },
+      userData: {
+        country: "USA",
+      },
+      reg_in_submission: false,
+      reg_show_alert: false,
+      reg_alert_variant: "bg-blue-500",
+      reg_alert_msg: "Please wait! Your account is being created.",
+    }
+  },
+  methods: {
+    ...mapActions(useUserStore, {
+      createUser: "register",
+    }),
+    async register(values) {
+      this.reg_show_alert = true
+      this.reg_in_submission = true
+      this.reg_alert_variant = "bg-blue-500"
+      this.reg_alert_msg = "Please wait! Your account is being created."
+
+      try {
+        await this.createUser(values)
+      } catch (error) {
+        this.reg_in_submission = false
+        this.reg_alert_variant = "bg-red-500"
+        this.reg_alert_msg =
+          "An unexpected error occurred. Please try again later."
+        return
+      }
+
+      this.reg_alert_variant = "bg-green-500"
+      this.reg_alert_msg = "Success! Your account has been created."
+      window.location.reload()
+    },
+  },
+}
+</script>
+
 <template>
   <!-- Registration Form -->
   <div
@@ -93,7 +148,9 @@
         type="checkbox"
         class="w-4 h-4 float-left -ml-6 mt-1 rounded"
       />
-      <label class="inline-block">Accept terms of service</label>
+      <i18n-t class="inline-block" keypath="register.accept" tag="label">
+        <a href="#">{{ $t("register.tos") }}</a>
+      </i18n-t>
       <ErrorMessage class="text-red-600 block" name="tos" />
     </div>
     <button
@@ -105,58 +162,3 @@
     </button>
   </vee-form>
 </template>
-
-<script>
-import { mapActions } from "pinia";
-import useUserStore from "@/stores/user";
-
-export default {
-  name: "RegisterForm",
-  data() {
-    return {
-      tab: "login",
-      schema: {
-        name: "required|min:3|max:100|alpha_spaces",
-        email: "required|min:3|max:100|email",
-        age: "required|min_value:18|max_value:100",
-        password: "required|min:9|max:100|excluded:password",
-        confirm_password: "passwords_mismatch:@password",
-        country: "required|country_excluded:Antarctica",
-        tos: "tos",
-      },
-      userData: {
-        country: "USA",
-      },
-      reg_in_submission: false,
-      reg_show_alert: false,
-      reg_alert_variant: "bg-blue-500",
-      reg_alert_msg: "Please wait! Your account is being created.",
-    };
-  },
-  methods: {
-    ...mapActions(useUserStore, {
-      createUser: "register",
-    }),
-    async register(values) {
-      this.reg_show_alert = true;
-      this.reg_in_submission = true;
-      this.reg_alert_variant = "bg-blue-500";
-      this.reg_alert_msg = "Please wait! Your account is being created.";
-
-      try {
-        await this.createUser(values);
-      } catch (error) {
-        this.reg_in_submission = false;
-        this.reg_alert_variant = "bg-red-500";
-        this.reg_alert_msg =
-          "An unexpected error occurred. Please try again later.";
-        return;
-      }
-
-      this.reg_alert_variant = "bg-green-500";
-      this.reg_alert_msg = "Success! Your account has been created.";
-      window.location.reload();
-    },
-  },
-};
-</script>

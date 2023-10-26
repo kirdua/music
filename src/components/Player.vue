@@ -1,3 +1,24 @@
+<script>
+import { mapActions, mapState } from "pinia"
+import usePlayerStore from "@/stores/player"
+
+export default {
+  name: "Player",
+  methods: {
+    ...mapActions(usePlayerStore, ["toggleAudio", "updateSeek"]),
+  },
+  computed: {
+    ...mapState(usePlayerStore, [
+      "playing",
+      "duration",
+      "seek",
+      "playerProgress",
+      "current_song",
+    ]),
+  },
+}
+</script>
+
 <template>
   <!-- Player -->
   <div class="fixed bottom-0 left-0 bg-white px-4 py-2 w-full">
@@ -40,24 +61,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapActions, mapState } from "pinia";
-import usePlayerStore from "@/stores/player";
-
-export default {
-  name: "Player",
-  methods: {
-    ...mapActions(usePlayerStore, ["toggleAudio", "updateSeek"]),
-  },
-  computed: {
-    ...mapState(usePlayerStore, [
-      "playing",
-      "duration",
-      "seek",
-      "playerProgress",
-      "current_song",
-    ]),
-  },
-};
-</script>

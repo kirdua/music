@@ -126,3 +126,9 @@ export default {
     </section>
   </main>
 </template>
+
+<style>
+.bg-img {
+  background-image: url(assets/img/header.png);
+}
+</style>

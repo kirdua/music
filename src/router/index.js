@@ -1,9 +1,10 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Home from "@/views/Home.vue";
-import About from "@/views/About.vue";
-import Manage from "@/views/Manage.vue";
-import useUserStore from "@/stores/user";
-import Song from "@/views/Song.vue";
+import { createRouter, createWebHistory } from "vue-router"
+import useUserStore from "@/stores/user"
+
+const Home = () => import("@/views/Home.vue")
+const About = () => import("@/views/About.vue")
+const Manage = () => import("@/views/Manage.vue")
+const Song = () => import("@/views/Song.vue")
 
 const routes = [
   {
@@ -22,8 +23,8 @@ const routes = [
     path: "/manage-music",
     component: Manage,
     beforeEnter(to, from, next) {
-      console.log("Manage Route Guard");
-      next();
+      console.log("Manage Route Guard")
+      next()
     },
     meta: {
       requiresAuth: true,
@@ -42,29 +43,29 @@ const routes = [
     path: "/:catchAll(.*)*",
     redirect: { name: "home" },
   },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   linkExactActiveClass: "text-yellow-500",
-});
+})
 
 router.beforeEach((to, from, next) => {
   // console.log("Global Guard");
 
   if (!to.meta.requiresAuth) {
-    next();
-    return;
+    next()
+    return
   }
 
-  const store = useUserStore();
+  const store = useUserStore()
 
   if (store.userLoggedIn) {
-    next();
+    next()
   } else {
-    next({ name: "home" });
+    next({ name: "home" })
   }
-});
+})
 
-export default router;
+export default router

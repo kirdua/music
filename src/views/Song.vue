@@ -1,31 +1,31 @@
 <script>
-import { songsCollection, auth, commentsCollection } from "@/includes/firebase"
-import { mapState, mapActions } from "pinia"
-import useUserStore from "@/stores/user"
-import usePlayerStore from "@/stores/player"
+import { songsCollection, auth, commentsCollection } from '@/includes/firebase'
+import { mapState, mapActions } from 'pinia'
+import useUserStore from '@/stores/user'
+import usePlayerStore from '@/stores/player'
 
 export default {
-  name: "Song",
+  name: 'Song',
   data() {
     return {
       song: {},
       schema: {
-        comment: "required|min:3",
+        comment: 'required|min:3',
       },
       comment_in_submission: false,
       comment_show_alert: false,
-      comment_alert_variant: "bg-blue-500",
-      comment_alert_message: "Please wait! Your comment is being submitted",
+      comment_alert_variant: 'bg-blue-500',
+      comment_alert_message: 'Please wait! Your comment is being submitted',
       comments: [],
-      sort: "1",
+      sort: '1',
     }
   },
   computed: {
-    ...mapState(useUserStore, ["userLoggedIn"]),
-    ...mapState(usePlayerStore, ["playing"]),
+    ...mapState(useUserStore, ['userLoggedIn']),
+    ...mapState(usePlayerStore, ['playing']),
     sortedComments() {
       return this.comments.slice().sort((a, b) => {
-        if (this.sort === "1") {
+        if (this.sort === '1') {
           return new Date(b.datePosted) - new Date(a.datePosted)
         }
 
@@ -38,26 +38,26 @@ export default {
 
     next((vm) => {
       if (!docSnapshot.exists) {
-        vm.$router.push({ name: "home" })
+        vm.$router.push({ name: 'home' })
         return
       }
 
       const { sort } = vm.$route.query
 
-      vm.sort = sort === "1" || sort === "2" ? sort : "1"
+      vm.sort = sort === '1' || sort === '2' ? sort : '1'
 
       vm.song = docSnapshot.data()
       vm.getComments()
     })
   },
   methods: {
-    ...mapActions(usePlayerStore, ["newSong"]),
+    ...mapActions(usePlayerStore, ['newSong']),
     async addComment(values, { resetForm }) {
       this.comment_in_submission = true
       this.comment_show_alert = true
-      this.comment_alert_variant = "bg-blue-500"
+      this.comment_alert_variant = 'bg-blue-500'
       this.comment_alert_message =
-        "Please wait! Your comment is being submitted"
+        'Please wait! Your comment is being submitted'
 
       const comment = {
         content: values.comment,
@@ -77,14 +77,14 @@ export default {
       this.getComments()
 
       this.comment_in_submission = false
-      this.comment_alert_variant = "bg-green-500"
-      this.comment_alert_message = "Comment added!"
+      this.comment_alert_variant = 'bg-green-500'
+      this.comment_alert_message = 'Comment added!'
 
       resetForm()
     },
     async getComments() {
       const snapshots = await commentsCollection
-        .where("sid", "==", this.$route.params.id)
+        .where('sid', '==', this.$route.params.id)
         .get()
 
       this.comments = []
@@ -124,6 +124,7 @@ export default {
       <div class="container mx-auto flex items-center">
         <!-- Play/Pause Button -->
         <button
+          id="play-btn"
           @click.prevent="newSong(song)"
           type="button"
           class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none"
@@ -137,7 +138,7 @@ export default {
           <!-- Song Info -->
           <div class="text-3xl font-bold">{{ song.modified_name }}</div>
           <div>{{ song.genre }}</div>
-          <div class="song-price">{{ $n(1, "currency") }}</div>
+          <div class="song-price">{{ $n(1, 'currency') }}</div>
         </div>
       </div>
     </section>
@@ -149,7 +150,7 @@ export default {
         <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
           <!-- Comment Count -->
           <span class="card-title">{{
-            $tc("song.comment_count", { count: song.comment_count })
+            $tc('song.comment_count', { count: song.comment_count })
           }}</span>
           <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
         </div>

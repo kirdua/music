@@ -1,19 +1,19 @@
 <script>
-import { mapActions, mapState } from "pinia"
-import usePlayerStore from "@/stores/player"
+import { mapActions, mapState } from 'pinia'
+import usePlayerStore from '@/stores/player'
 
 export default {
-  name: "Player",
+  name: 'Player',
   methods: {
-    ...mapActions(usePlayerStore, ["toggleAudio", "updateSeek"]),
+    ...mapActions(usePlayerStore, ['toggleAudio', 'updateSeek']),
   },
   computed: {
     ...mapState(usePlayerStore, [
-      "playing",
-      "duration",
-      "seek",
-      "playerProgress",
-      "current_song",
+      'playing',
+      'duration',
+      'seek',
+      'playerProgress',
+      'current_song',
     ]),
   },
 }
@@ -30,7 +30,7 @@ export default {
     </div>
     <div class="flex flex-nowrap gap-4 items-center">
       <!-- Play/Pause Button -->
-      <button type="button" @click.prevent="toggleAudio">
+      <button type="button" @click.prevent="toggleAudio" id="player-play-btn">
         <i
           class="fa text-gray-500 text-xl"
           :class="{ 'fa-play': !playing, 'fa-pause': playing }"

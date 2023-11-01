@@ -1,0 +1,26 @@
+/* eslint-disable prettier/prettier */
+import { describe, it, expect } from 'vitest'
+import { shallowMount, RouterLinkStub } from '@vue/test-utils'
+import SongItem from '../SongItem.vue'
+
+describe('Snapshots SongItem.vue', () => {
+  it('renders correctly', () => {
+    const song = {
+      docID: 'abc',
+      modified_name: 'test',
+      display_name: 'test',
+      comment_count: 5,
+    }
+
+    const wrapper = shallowMount(SongItem, {
+      propsData: { song },
+      global: {
+        components: {
+          'router-link': RouterLinkStub,
+        },
+      },
+    })
+
+    expect(wrapper.element).toMatchSnapshot()
+  })
+})
